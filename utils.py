@@ -21,7 +21,7 @@ def read_file(filename):
            
             sen.append("<s>")
             word_counts["<s>"] += 1
-            words = line.split(" ")
+            words = line.strip("\n").split(" ")
             for word in words:
                 sen.append(word.lower())
                 word_counts[word.lower()] += 1
@@ -65,7 +65,7 @@ def create_word_ids(sentences):
     for sentence in sentences:
         for word in sentence:
             if not (word in word_to_id):
-                word_to_id[word] = current_id;
+                word_to_id[word] = current_id
                 current_id += 1
     return word_to_id
 
@@ -82,11 +82,13 @@ def create_n_gram(sentences,n):
         prev_words = []
         for i in range (0,n-1):
             prev_words.append(sentence[i])
-        ngram.append((prev_words,sentence[n-1]))
+        
+        ngram.append((prev_words[:],sentence[n-1]))
         for i in range (n, len(sentence)-1):
             prev_words.pop(0)
             prev_words.append(sentence[i])
-            ngram.append((prev_words,sentence[i+1]))
+            ngram.append((prev_words[:],sentence[i+1]))
+        
         
     return ngram
     
