@@ -60,7 +60,13 @@ def convert_to_unk(sentences, word_counts, threshold):
 
     return new_sentences
 
-def creare_word_ids(sentences):
+def create_word_ids(sentences):
+    """Iterates through each word in each sentences and assigns a unique ID to each unique word.
+
+    :param sentences: A 2d array of individual words and of each sentence
+
+    :return word_to_id: A dict of words to their unique IDs
+    """
     current_id = 0
     word_to_id = {}
     for sentence in sentences:
@@ -69,3 +75,28 @@ def creare_word_ids(sentences):
                 word_to_id[word] = current_id;
                 current_id += 1
     return word_to_id
+
+def create_n_gram(sentences,n):
+    """Creates an array of present words to previous words depending on the size of the ngram.
+
+    :param sentences: A 2d array of individual words and of each sentence
+    :param n: The size of the n-gram
+
+    :return n_gram: An array of tuples in the form of (array of previous words, word).
+    """
+    n_gram = []
+    for sentence in sentences:
+        prev_words = []
+        for (int i = 0; i<n;i++){
+            prev_words.append([)sentence[i])
+        }
+        ngram.append((prev_words,sentence[n]))
+        for (int = n; i<len(sentence)-1; i++){
+            prev_words.pop()
+            prev_words.append(sentence[i])
+            ngram.append((prev_words,sentence[i+1]))
+        }
+    return ngram
+    
+
+
