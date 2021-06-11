@@ -8,13 +8,15 @@ def read_csv(filename):
         :param filename: The name of the CSV file to read from.
         
         :return sentences: A 2d array of individual words and of each sentence, including start and end words.
+        :return word_counts: A dict of word to integer, which is the frequency of each words occurence.
     """
     dirname = os.path.dirname(__file__)
     filename = os.path.join(dirname, filename)
     sentences = []
     sen = []
     sen.append("<s>")
-    word_counts = 1;
+    word_count = defaultdict(int)
+    word_counts["<s>"] += 1;
     with open(filename) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
         for i, row in enumerate(csv_reader):
@@ -23,24 +25,24 @@ def read_csv(filename):
             else:
                 if row[0] == '':
                     sen.append("</s>")
-                    word_count += 1
+                    word_count["</s>"] += 1
                     sentences.append(sen)
 
                     sen = []
                     sen.append("<s>")
-                    word_count += 1
+                    word_count["<s>"] += 1
                 else:
                     sen.append((row[0].lower()))
-                    word_count += 1
+                    word_count[row[0].lower()] += 1
     sen.append("</s>")
-    word_count += 1
+    word_count["</s>"] += 1
     sentences.append(sen)
     return sentences, word_counts
 
 def convert_to_unk(sentences, word_counts, threshold):
     """Iterates through each word in each sentences and replaces words with a frequency lower then the threshold to the word UNK.
 
-        :param sentences: A 2d array of tuples in the form of (word,tag) for each word of each sentence.
+        :param sentences:  A 2d array of individual words and of each sentence
         :param word_counts: A dict of word to integer, which is the frequency of each words occurence.
         :param threshold: An int that dicates the minimum frequency a word must have before being replaces with UNK.
 
