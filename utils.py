@@ -60,3 +60,12 @@ def convert_to_unk(sentences, word_counts, threshold):
 
     return new_sentences
 
+def creare_word_ids(sentences):
+    current_id = 0
+    word_to_id = {}
+    for sentence in sentences:
+        for word in sentences:
+            if not (word in word_to_id):
+                word_to_id[word] = current_id;
+                current_id += 1
+    return word_to_id
