@@ -111,7 +111,7 @@ def run():
         zulu_data_test, batch_size=BATCH_SIZE, num_workers=num_workers)
 
     lm = language_model(context=MODEL_CONTEXT, embedding_size=EMBEDDING_SIZE,
-                        hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=len(zulu_data_train), dropout_prob=DROPOUT_PROBABILITY)
+                        hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=zulu_data_train.vocab_length, dropout_prob=DROPOUT_PROBABILITY)
 
     optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
 
