@@ -10,7 +10,7 @@ import multiprocessing
 torch.manual_seed(42)
 
 
-def train(model, optimizer, dataloader, num_epochs):
+def train(model, optimizer, dataloader, num_epochs, save_after_every):
     # put model into train mode - important for certain features such as dropout
     model.train()
     total_loss = 0
@@ -48,6 +48,10 @@ def train(model, optimizer, dataloader, num_epochs):
 
         total_loss += mid_total_loss
         print("Mean Loss after Epoch", epoch+1, ":", total_loss/count)
+        if (epoch % save_after_every == 0):
+            torch.save(model.state_dict(), "model.pt")
+    
+    torch.save(model.state_dict(), "model.pt")
 
 
 def test(model, dataloader):
@@ -94,6 +98,8 @@ def run():
     TRAINING_FILENAME = "nchlt_text.zu.train"
     VALID_FILENAME = "nchlt_text.zu.valid"
     TESTING_FILENAME = "nchlt_text.zu.test"
+    SAVE_AFTER_EVERY = 1
+    LOAD_MODEl = None #"model.pt"
 
     num_workers = multiprocessing.cpu_count()
 
@@ -115,12 +121,14 @@ def run():
 
     optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
 
-    
-    print("Training:")
-    train(model=lm, optimizer=optimizer,
-          dataloader=dataloader_train, num_epochs=NUM_EPOCHS)
-
-    print("After Training:")
+    if (LOAD_MODEl != None):
+        print("Training:")
+        train(model=lm, optimizer=optimizer, dataloader=dataloader_train, num_epochs=NUM_EPOCHS, save_after_every= SAVE_AFTER_EVERY)
+    else:
+        lm.load_state_dict(torch.load("model"))
+        lm.eval()
+   
+    print("Testing:")
 
     test(model=lm, dataloader=dataloader_test)
 
