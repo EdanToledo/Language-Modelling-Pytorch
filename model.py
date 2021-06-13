@@ -9,7 +9,7 @@ torch.manual_seed(42)
 
 
 class language_model(nn.Module):
-    def __init__(self, context, embedding_size, hidden_size, number_of_layers, vocab):
+    def __init__(self, context, embedding_size, hidden_size, number_of_layers, vocab, dropout_prob):
         super(language_model, self).__init__()
 
         self.device = torch.device(
@@ -33,18 +33,23 @@ class language_model(nn.Module):
             embedding_size*context, hidden_size).to(self.device)
         self.output_layer = nn.Linear(hidden_size, vocab).to(self.device)
 
+        self.dropout = nn.Dropout(dropout_prob)
+
         self.loss_function = nn.NLLLoss()
 
     def forward(self, input_data):
-        
-        embeddings = self.embedding(
-            input_data).view(-1, (self.embedding_size*self.context)) # Size = batch x (embeddings * context)
 
-        initial_output = self.input_layer(
-            embeddings)  # Size = batch x hidden size
+        embeddings = self.embedding(
+            input_data).view(-1, (self.embedding_size*self.context))  # Size = batch x (embeddings * context)
+
+        initial_output = torch.tanh(self.input_layer(
+            embeddings))  # Size = batch x hidden size
 
         if not self.hidden_network == None:
-            initial_output = self.hidden_network(initial_output) # Size = batch x hidden size
+            initial_output = torch.tanh(self.hidden_network(
+                initial_output))  # Size = batch x hidden size
+
+        initial_output = self.dropout(initial_output)
 
         final_output = self.output_layer(
             initial_output)  # Size = batch x Vocab
