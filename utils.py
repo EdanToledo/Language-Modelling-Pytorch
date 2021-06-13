@@ -84,12 +84,12 @@ def create_n_gram(sentences,n):
             prev_words.append(sentence[i])
         
         ngram.append((prev_words[:],sentence[n-1]))
-        for i in range (n, len(sentence)-1):
+        for i in range (n-1, len(sentence)-1):
             prev_words.pop(0)
             prev_words.append(sentence[i])
             ngram.append((prev_words[:],sentence[i+1]))
         
-        
+    
     return ngram
     
 
