@@ -9,6 +9,7 @@ import multiprocessing
 
 torch.manual_seed(42)
 
+
 def train(model, optimizer, dataloader, num_epochs):
     # put model into train mode - important for certain features such as dropout
     model.train()
@@ -96,30 +97,33 @@ def run():
 
     num_workers = multiprocessing.cpu_count()
 
-    zulu_data_train = language_dataset(filename=TRAINING_FILENAME, context=MODEL_CONTEXT)
+    zulu_data_train = language_dataset(
+        filename=TRAINING_FILENAME, context=MODEL_CONTEXT)
     #zulu_data_valid = language_dataset(filename=VALID_FILENAME, context=MODEL_CONTEXT)
-    #zulu_data_test = language_dataset(filename=TESTING_FILENAME, context=MODEL_CONTEXT)
+    zulu_data_test = language_dataset(filename=TESTING_FILENAME, context=MODEL_CONTEXT,
+                                      word_to_id=zulu_data_train.word_to_id, word_counts=zulu_data_train.word_counts)
+
     
-    dataloader_train = DataLoader(zulu_data_train, batch_size=BATCH_SIZE,num_workers=num_workers)
-    # dataloader_valid = DataLoader(zulu_data_train, batch_size=BATCH_SIZE,num_workers=num_workers)
-    # dataloader_test = DataLoader(zulu_data_train, batch_size=BATCH_SIZE,num_workers=num_workers)
+    dataloader_train = DataLoader(
+        zulu_data_train, batch_size=BATCH_SIZE, num_workers=num_workers)
+    # dataloader_valid = DataLoader(zulu_data_valid, batch_size=BATCH_SIZE,num_workers=num_workers)
+    dataloader_test = DataLoader(
+        zulu_data_test, batch_size=BATCH_SIZE, num_workers=num_workers)
 
     lm = language_model(context=MODEL_CONTEXT, embedding_size=EMBEDDING_SIZE,
-                        hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=len(zulu_data_train),dropout_prob=DROPOUT_PROBABILITY)
+                        hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=len(zulu_data_train), dropout_prob=DROPOUT_PROBABILITY)
 
     optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
 
-    # print("Before training:")
-
-    # test(model=lm,dataloader=dataloader_train)
-
+    
     print("Training:")
     train(model=lm, optimizer=optimizer,
           dataloader=dataloader_train, num_epochs=NUM_EPOCHS)
 
     print("After Training:")
 
-    test(model=lm,dataloader=dataloader_train)
-    
+    test(model=lm, dataloader=dataloader_test)
+
+
 if __name__ == "__main__":
     run()

@@ -4,11 +4,21 @@ import utils
 
 class language_dataset(Dataset):
 
-    def __init__(self, filename,context):
+    def __init__(self, filename,context,word_to_id=None,word_counts=None):
+        
         self.sentences, self.word_counts = utils.read_file(filename)
 
+        if not word_counts==None:
+            self.word_counts = word_counts
+        
+            
         self.sentences = utils.convert_to_unk(self.sentences, self.word_counts, 1)
-        self.word_to_id = utils.create_word_ids(self.sentences)
+        
+        if word_to_id == None:
+            self.word_to_id = utils.create_word_ids(self.sentences)
+        else:
+            self.word_to_id = word_to_id
+
         self.ngrams = utils.create_n_gram(self.sentences, context+1)
 
     def __len__(self):
