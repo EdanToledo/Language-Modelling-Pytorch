@@ -36,9 +36,9 @@ class language_model(nn.Module):
         self.loss_function = nn.NLLLoss()
 
     def forward(self, input_data):
-        # Size = batch x (embeddings * context)
+        
         embeddings = self.embedding(
-            input_data).view(-1, (self.embedding_size*self.context))
+            input_data).view(-1, (self.embedding_size*self.context)) # Size = batch x (embeddings * context)
 
         initial_output = self.input_layer(
             embeddings)  # Size = batch x hidden size
