@@ -22,8 +22,8 @@ class language_dataset(Dataset):
 
         self.ngrams = utils.create_n_gram(self.sentences, context+1)
 
-        self.vocab_length = len(word_to_id)
-        
+        self.vocab_length = len(self.word_to_id)
+
 
     def __len__(self):
         return len(self.ngrams)
