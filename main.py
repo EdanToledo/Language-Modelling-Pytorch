@@ -1,5 +1,6 @@
 import torch
 from torch import optim
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils import data
 from torch.utils.data import DataLoader
 import utils
@@ -10,7 +11,8 @@ import multiprocessing
 torch.manual_seed(42)
 
 
-def train(model, optimizer, dataloader, num_epochs):
+def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs):
+    scheduler = ReduceLROnPlateau(optimizer, "min")
     # put model into train mode - important for certain features such as dropout
     model.train()
     total_loss = 0
@@ -18,7 +20,7 @@ def train(model, optimizer, dataloader, num_epochs):
     # epoch is the number of times we train fully on the whole dataset
     for epoch in range(0, num_epochs):
         mid_total_loss = 0
-        for i, batch in enumerate(dataloader):
+        for i, batch in enumerate(dataloader_train):
 
             # separate the context from the current word and put on device
             context_word_ids = batch[:, 0:model.context]
@@ -40,6 +42,7 @@ def train(model, optimizer, dataloader, num_epochs):
 
             mid_total_loss += loss.item()
             count += 1
+
             # This uses the optimizer to take one step of gradient descent
             optimizer.step()
 
@@ -47,7 +50,13 @@ def train(model, optimizer, dataloader, num_epochs):
             #     print("Mean Loss at iteration", i+1, ":", mid_total_loss/(i+1))
 
         total_loss += mid_total_loss
-        print("Mean Loss after Epoch", epoch+1, ":", total_loss/count)
+
+        val_loss = test(model, dataloader_valid)
+        print("Learning Rate Used:", optimizer.param_groups[0]["lr"])
+        scheduler.step(val_loss)
+
+        print("Mean Training Loss after Epoch", epoch+1, ":", total_loss/count)
+        print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss)
 
 
 def test(model, dataloader):
@@ -80,6 +89,8 @@ def test(model, dataloader):
 
         print("Mean Accuracy:", mean_batch_accuracy.item()/total_count)
         print("Mean Loss:", total_loss/total_count)
+    model.train()
+    return (total_loss/total_count)
 
 
 def run():
@@ -99,14 +110,15 @@ def run():
 
     zulu_data_train = language_dataset(
         filename=TRAINING_FILENAME, context=MODEL_CONTEXT)
-    #zulu_data_valid = language_dataset(filename=VALID_FILENAME, context=MODEL_CONTEXT)
+    zulu_data_valid = language_dataset(filename=VALID_FILENAME, context=MODEL_CONTEXT,
+                                       word_to_id=zulu_data_train.word_to_id, word_counts=zulu_data_train.word_counts)
     zulu_data_test = language_dataset(filename=TESTING_FILENAME, context=MODEL_CONTEXT,
                                       word_to_id=zulu_data_train.word_to_id, word_counts=zulu_data_train.word_counts)
 
-    
     dataloader_train = DataLoader(
         zulu_data_train, batch_size=BATCH_SIZE, num_workers=num_workers)
-    # dataloader_valid = DataLoader(zulu_data_valid, batch_size=BATCH_SIZE,num_workers=num_workers)
+    dataloader_valid = DataLoader(
+        zulu_data_valid, batch_size=BATCH_SIZE, num_workers=num_workers)
     dataloader_test = DataLoader(
         zulu_data_test, batch_size=BATCH_SIZE, num_workers=num_workers)
 
@@ -115,10 +127,9 @@ def run():
 
     optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
 
-    
     print("Training:")
     train(model=lm, optimizer=optimizer,
-          dataloader=dataloader_train, num_epochs=NUM_EPOCHS)
+          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS)
 
     print("After Training:")
 
