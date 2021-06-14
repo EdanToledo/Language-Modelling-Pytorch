@@ -5,7 +5,8 @@ import utils
 class language_dataset(Dataset):
 
     def __init__(self, filename,context,word_to_id=None,word_counts=None):
-        
+    
+
         self.sentences, self.word_counts = utils.read_file(filename)
 
         if not word_counts==None:
@@ -21,8 +22,11 @@ class language_dataset(Dataset):
 
         self.ngrams = utils.create_n_gram(self.sentences, context+1)
 
+        self.vocab_length = len(self.word_to_id)
+
+
     def __len__(self):
-        return len(self.word_to_id)
+        return len(self.ngrams)
 
     def __getitem__(self, index):
         if torch.is_tensor(index):

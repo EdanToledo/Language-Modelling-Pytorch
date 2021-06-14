@@ -11,7 +11,7 @@ import multiprocessing
 torch.manual_seed(42)
 
 
-def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs):
+def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every):
     scheduler = ReduceLROnPlateau(optimizer, "min")
     # put model into train mode - important for certain features such as dropout
     model.train()
@@ -57,6 +57,11 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs):
 
         print("Mean Training Loss after Epoch", epoch+1, ":", total_loss/count)
         print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss)
+     
+        if (epoch % save_after_every == 0):
+            torch.save(model.state_dict(), "model.pt")
+    
+    torch.save(model.state_dict(), "model.pt")
 
 
 def test(model, dataloader):
@@ -105,6 +110,8 @@ def run():
     TRAINING_FILENAME = "nchlt_text.zu.train"
     VALID_FILENAME = "nchlt_text.zu.valid"
     TESTING_FILENAME = "nchlt_text.zu.test"
+    SAVE_AFTER_EVERY = 1
+    LOAD_MODEl = None #"model.pt"
 
     num_workers = multiprocessing.cpu_count()
 
@@ -123,15 +130,20 @@ def run():
         zulu_data_test, batch_size=BATCH_SIZE, num_workers=num_workers)
 
     lm = language_model(context=MODEL_CONTEXT, embedding_size=EMBEDDING_SIZE,
-                        hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=len(zulu_data_train), dropout_prob=DROPOUT_PROBABILITY)
+                        hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=zulu_data_train.vocab_length, dropout_prob=DROPOUT_PROBABILITY)
 
-    optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
+    optimizer = optim.SGD(lm.parameters(), lr=LEARNING_RATE)
 
-    print("Training:")
-    train(model=lm, optimizer=optimizer,
-          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS)
 
-    print("After Training:")
+    if (LOAD_MODEl == None):
+        print("Training:")
+        train(model=lm, optimizer=optimizer,
+          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY)
+    else:
+        lm.load_state_dict(torch.load(LOAD_MODEl))
+        lm.eval()
+   
+    print("Testing:")
 
     test(model=lm, dataloader=dataloader_test)
 
