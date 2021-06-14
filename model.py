@@ -26,7 +26,7 @@ class language_model(nn.Module):
             self.hidden_network = nn.Sequential()
             for i in range(1, number_of_layers+1):
                 self.hidden_network.add_module(
-                    "linear"+str(i), nn.Linear(hidden_size, hidden_size))
+                    "linear"+str(i), nn.Linear(hidden_size, hidden_size).to(self.device))
 
         self.embedding = nn.Embedding(vocab, embedding_size).to(self.device)
         self.input_layer = nn.Linear(

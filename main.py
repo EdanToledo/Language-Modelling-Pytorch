@@ -11,8 +11,9 @@ import multiprocessing
 torch.manual_seed(42)
 
 
-def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every):
-    scheduler = ReduceLROnPlateau(optimizer, "min")
+def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_valid=False):
+    if use_valid:
+        scheduler = ReduceLROnPlateau(optimizer=optimizer, mode="min",patience=0)
     # put model into train mode - important for certain features such as dropout
     model.train()
     total_loss = 0
@@ -51,9 +52,10 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
 
         total_loss += mid_total_loss
 
-        val_loss = test(model, dataloader_valid)
-        print("Learning Rate Used:", optimizer.param_groups[0]["lr"])
-        scheduler.step(val_loss)
+        if use_valid:
+            val_loss = test(model, dataloader_valid)
+            print("Learning Rate Used:", optimizer.param_groups[0]["lr"])
+            scheduler.step(val_loss)
 
         print("Mean Training Loss after Epoch", epoch+1, ":", total_loss/count)
         print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss)
@@ -103,14 +105,14 @@ def run():
     EMBEDDING_SIZE = 300
     HIDDEN_SIZE = 128
     NUMBER_OF_HIDDEN_LAYERS = 0
-    LEARNING_RATE = 0.001
-    NUM_EPOCHS = 10
+    LEARNING_RATE = 0.01
+    NUM_EPOCHS = 15
     BATCH_SIZE = 256
     DROPOUT_PROBABILITY = 0.2
     TRAINING_FILENAME = "nchlt_text.zu.train"
     VALID_FILENAME = "nchlt_text.zu.valid"
     TESTING_FILENAME = "nchlt_text.zu.test"
-    SAVE_AFTER_EVERY = 1
+    SAVE_AFTER_EVERY = 10
     LOAD_MODEl = None #"model.pt"
 
     num_workers = multiprocessing.cpu_count()
@@ -132,13 +134,13 @@ def run():
     lm = language_model(context=MODEL_CONTEXT, embedding_size=EMBEDDING_SIZE,
                         hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=zulu_data_train.vocab_length, dropout_prob=DROPOUT_PROBABILITY)
 
-    optimizer = optim.SGD(lm.parameters(), lr=LEARNING_RATE)
+    optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
 
 
     if (LOAD_MODEl == None):
         print("Training:")
         train(model=lm, optimizer=optimizer,
-          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY)
+          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY,use_valid=True)
     else:
         lm.load_state_dict(torch.load(LOAD_MODEl))
         lm.eval()
