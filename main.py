@@ -11,9 +11,9 @@ import multiprocessing
 torch.manual_seed(42)
 
 
-def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_valid=False):
+def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_valid=False,patience = 0):
     if use_valid:
-        scheduler = ReduceLROnPlateau(optimizer=optimizer, mode="min",patience=0)
+        scheduler = ReduceLROnPlateau(optimizer=optimizer, mode="min",patience=patience)
     # put model into train mode - important for certain features such as dropout
     model.train()
     total_loss = 0
