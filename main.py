@@ -11,7 +11,7 @@ import multiprocessing
 torch.manual_seed(42)
 
 
-def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_valid=False,patience = 0):
+def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_valid=False,patience = 0, model_name):
     if use_valid:
         scheduler = ReduceLROnPlateau(optimizer=optimizer, mode="min",patience=patience)
     # put model into train mode - important for certain features such as dropout
@@ -63,9 +63,9 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss.item())
      
         if (epoch % save_after_every == 0):
-            torch.save(model.state_dict(), "model.pt")
+            torch.save(model.state_dict(), model_name)
     
-    torch.save(model.state_dict(), "model.pt")
+    torch.save(model.state_dict(), model_name)
 
 
 def test(model, dataloader):
@@ -116,7 +116,8 @@ def run():
     VALID_FILENAME = "nchlt_text.zu.valid"
     TESTING_FILENAME = "nchlt_text.zu.test"
     SAVE_AFTER_EVERY = 10
-    LOAD_MODEl = None #"model.pt"
+    LOAD_MODEl =  None #""
+    MODEL_NAME = "model.pt"
     USE_VALID = True
     USE_ADAM = True #Uses SVG otherwise
 
@@ -149,7 +150,7 @@ def run():
     if (LOAD_MODEl == None):
         print("Training:")
         train(model=lm, optimizer=optimizer,
-          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY,use_valid=USE_VALID)
+          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY,use_valid=USE_VALID, model_name=MODEL_NAME)
     else:
         lm.load_state_dict(torch.load(LOAD_MODEl))
         lm.eval()
