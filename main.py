@@ -22,7 +22,6 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
     model.train()
     # epoch is the number of times we train fully on the whole dataset
     for epoch in range(0, num_epochs):
-        mid_total_loss = 0
         total_loss = 0
         count = 0
         epoch_start = time.time()
@@ -46,7 +45,7 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             # This uses the loss function to calculate the gradients
             loss.backward()
 
-            mid_total_loss += loss
+            total_loss += loss
             count += 1
 
             # This uses the optimizer to take one step of gradient descent
@@ -54,10 +53,10 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
 
             end_batch = time.time()
             if i % 200 == 0:
-                print("| Epoch: {0:3d} | Batch: {1:5d} | Learning Rate: {2:1.7f} | ms/batch {3:1.4f} | Mean Loss: {4:3.4f} | Perplexity: {5:7.4f} |".format(epoch+1,i+1,optimizer.param_groups[0]["lr"],end_batch-start_batch,(mid_total_loss/(i+1)).item(),torch.exp(mid_total_loss/(i+1)).item()))
+                print("| Epoch: {0:3d} | Batch: {1:5d} | Learning Rate: {2:1.7f} | ms/batch {3:1.4f} | Mean Training Loss: {4:3.4f} | Perplexity: {5:7.4f} |".format(epoch+1,i+1,optimizer.param_groups[0]["lr"],end_batch-start_batch,(total_loss/(i+1)).item(),torch.exp(total_loss/(i+1)).item()))
                 
         epoch_end = time.time()
-        total_loss += mid_total_loss
+        
         perplexity = torch.exp(total_loss/count)
 
         if LOG_TO_WANDB:

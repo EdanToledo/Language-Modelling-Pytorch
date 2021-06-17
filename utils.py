@@ -79,19 +79,19 @@ def create_n_gram(sentences,n):
     """
     ngram = []
     for sentence in sentences:
-        prev_words = []
-        for i in range (0,n):
-            prev_words.append(sentence[i])
-        try:
-            ngram.append((prev_words[:],sentence[n]))
-        except:
+        if len(sentence)<n+1:
             continue
+        prev_words = []
+        for i in range (n):
+            prev_words.append(sentence[i])
+        
+        ngram.append((prev_words[:],sentence[n]))
+       
         for i in range (n, len(sentence)-1):
             prev_words.pop(0)
             prev_words.append(sentence[i])
             ngram.append((prev_words[:],sentence[i+1]))
-        
-    
+       
     return ngram
     
 

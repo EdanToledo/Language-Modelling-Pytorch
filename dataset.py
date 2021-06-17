@@ -20,7 +20,7 @@ class language_dataset(Dataset):
         else:
             self.word_to_id = word_to_id
 
-        self.ngrams = utils.create_n_gram(self.sentences, context+1)
+        self.ngrams = utils.create_n_gram(self.sentences, context)
 
         self.vocab_length = len(self.word_to_id)
 
