@@ -52,8 +52,8 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             optimizer.step()
 
             end_batch = time.time()
-            if i % 200 == 0:
-                print("| Epoch: {0:3d} | Batch: {1:5d} | Learning Rate: {2:1.7f} | ms/batch {3:1.4f} | Mean Training Loss: {4:3.4f} | Perplexity: {5:7.4f} |".format(epoch+1,i+1,optimizer.param_groups[0]["lr"],end_batch-start_batch,(total_loss/(i+1)).item(),torch.exp(total_loss/(i+1)).item()))
+            if (i+1) % 200 == 0:
+                print("| Epoch: {0:3d} | Batch: {1:5d}/{6:5d} | Learning Rate: {2:1.7f} | ms/batch {3:1.4f} | Mean Training Loss: {4:3.4f} | Perplexity: {5:7.4f} |".format(epoch+1,i+1,optimizer.param_groups[0]["lr"],end_batch-start_batch,(total_loss/(i+1)).item(),torch.exp(total_loss/(i+1)).item(),len(dataloader_train)))
                 
         epoch_end = time.time()
         
