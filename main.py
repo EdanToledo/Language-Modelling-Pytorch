@@ -117,6 +117,8 @@ def run():
     TESTING_FILENAME = "nchlt_text.zu.test"
     SAVE_AFTER_EVERY = 10
     LOAD_MODEl = None #"model.pt"
+    USE_VALID = True
+    USE_ADAM = True #Uses SVG otherwise
 
     num_workers = multiprocessing.cpu_count()
 
@@ -137,13 +139,17 @@ def run():
     lm = language_model(context=MODEL_CONTEXT, embedding_size=EMBEDDING_SIZE,
                         hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=zulu_data_train.vocab_length, dropout_prob=DROPOUT_PROBABILITY)
 
-    optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
+    if (USE_ADAM):
+        optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
+    else:
+        optimizer = optim.SGD(lm.parameters(), lr=LEARNING_RATE)
+
 
 
     if (LOAD_MODEl == None):
         print("Training:")
         train(model=lm, optimizer=optimizer,
-          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY,use_valid=True)
+          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY,use_valid=USE_VALID)
     else:
         lm.load_state_dict(torch.load(LOAD_MODEl))
         lm.eval()
