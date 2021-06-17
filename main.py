@@ -7,22 +7,27 @@ import utils
 from model import language_model
 from dataset import language_dataset
 import multiprocessing
+import wandb
+import argparse
+import time
+
 
 torch.manual_seed(42)
 
 
-def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_valid=False,patience = 0, model_name):
-    if use_valid:
+def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_scheduler=True,patience = 0, model_name="model.pt",LOG_TO_WANDB=False):
+    if use_scheduler:
         scheduler = ReduceLROnPlateau(optimizer=optimizer, mode="min",patience=patience)
     # put model into train mode - important for certain features such as dropout
     model.train()
-    total_loss = 0
-    count = 0
     # epoch is the number of times we train fully on the whole dataset
     for epoch in range(0, num_epochs):
         mid_total_loss = 0
+        total_loss = 0
+        count = 0
+        epoch_start = time.time()
         for i, batch in enumerate(dataloader_train):
-
+            start_batch = time.time()
             # separate the context from the current word and put on device
             context_word_ids = batch[:, 0:model.context]
             context_word_ids = context_word_ids.to(model.device)
@@ -47,20 +52,26 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             # This uses the optimizer to take one step of gradient descent
             optimizer.step()
 
-            # if i % 500 == 0:
-            #     print("Mean Loss at iteration", i+1, ":", mid_total_loss/(i+1))
-
+            end_batch = time.time()
+            if i % 500 == 0:
+                print("| Epoch:",epoch+1,"| Batch:",i+1,"Learning Rate:",optimizer.param_groups[0]["lr"],"| ms/b:",end_batch-start_batch,"| Mean Loss:",(mid_total_loss/(i+1)).item(),"| Perplexity:",torch.exp(mid_total_loss/(i+1)).item(),"|")
+        
+        epoch_end = time.time()
         total_loss += mid_total_loss
         perplexity = torch.exp(total_loss/count)
 
-        print("Mean Training Loss after Epoch", epoch+1, ":", (total_loss/count).item())
-        print("Mean Training Perplexity after Epoch", epoch+1, ":", perplexity.item())
+        if LOG_TO_WANDB:
+            wandb.log({"Mean Training Loss after Epoch" : (total_loss/count).item()})
+            wandb.log({"Mean Training Perplexity after Epoch": perplexity.item()})
+            wandb.log({"Mean Validation Loss After Epoch" : val_loss.item()})
+
+        val_loss , val_perplexity = test(model, dataloader_valid)
+        print("------------------------------------------------------------------------------")
+        print("| End of Epoch", epoch+1, "| Time Taken:",epoch_end-epoch_start,"| Training Loss:",(total_loss/count).item(),"| Training Perplexity:",perplexity.item(),"| Validation Loss:",val_loss.item(),"| Validation Perplexity:",val_perplexity.item(),"|")
+        print("------------------------------------------------------------------------------")
         
-        if use_valid:
-            val_loss = test(model, dataloader_valid)
-            print("Learning Rate Used:", optimizer.param_groups[0]["lr"])
-            scheduler.step(val_loss)
-            print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss.item())
+        if use_scheduler:
+            scheduler.step(val_loss.item())
      
         if (epoch % save_after_every == 0):
             torch.save(model.state_dict(), model_name)
@@ -96,30 +107,42 @@ def test(model, dataloader):
             total_loss += loss
             total_count += 1
 
-        print("Mean Accuracy:", mean_batch_accuracy.item()/total_count)
-        print("Mean Loss:", (total_loss/total_count).item())
-        print("Mean Perplexity:", torch.exp(total_loss/total_count).item())
     model.train()
-    return (total_loss/total_count)
+    return (total_loss/total_count) , torch.exp(total_loss/total_count)
 
 
-def run():
-    MODEL_CONTEXT = 3
-    EMBEDDING_SIZE = 300
-    HIDDEN_SIZE = 128
-    NUMBER_OF_HIDDEN_LAYERS = 0
-    LEARNING_RATE = 0.001
-    NUM_EPOCHS = 15
-    BATCH_SIZE = 256
-    DROPOUT_PROBABILITY = 0.2
-    TRAINING_FILENAME = "nchlt_text.zu.train"
-    VALID_FILENAME = "nchlt_text.zu.valid"
-    TESTING_FILENAME = "nchlt_text.zu.test"
-    SAVE_AFTER_EVERY = 10
-    LOAD_MODEl =  None #""
-    MODEL_NAME = "model.pt"
-    USE_VALID = True
-    USE_ADAM = True #Uses SVG otherwise
+def run(args):
+    MODEL_CONTEXT = args.model_context
+    EMBEDDING_SIZE = args.embedding_size
+    HIDDEN_SIZE = args.hidden_size
+    NUMBER_OF_HIDDEN_LAYERS = args.number_of_hidden_layers
+    LEARNING_RATE = args.learning_rate
+    NUM_EPOCHS = args.num_epochs
+    BATCH_SIZE = args.batch_size
+    DROPOUT_PROBABILITY = args.dropout_prob
+    TRAINING_FILENAME = args.training_file
+    VALID_FILENAME = args.validation_file
+    TESTING_FILENAME = args.testing_file
+    SAVE_AFTER_EVERY = args.save_after_every
+    LOAD_MODEl =  args.load_model 
+    MODEL_NAME = args.model_name
+    USE_SCHEDULER = args.no_scheduler
+    USE_ADAM = args.use_adam 
+    LOG_TO_WANDB=args.log_wandb
+
+
+    if LOG_TO_WANDB:
+        wandb.init(project='NLP_ASSIGNMENT2', entity='edan')
+        config = wandb.config
+        config.learning_rate = LEARNING_RATE
+        config.context = MODEL_CONTEXT
+        config.hidden_size = HIDDEN_SIZE
+        config.number_of_hidden_layers = NUMBER_OF_HIDDEN_LAYERS
+        config.batch_size = BATCH_SIZE
+        config.dropout_probability = DROPOUT_PROBABILITY
+        config.use_adam = USE_ADAM
+
+    
 
     num_workers = multiprocessing.cpu_count()
 
@@ -148,17 +171,74 @@ def run():
 
 
     if (LOAD_MODEl == None):
-        print("Training:")
+        print("Training Model...")
         train(model=lm, optimizer=optimizer,
-          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY,use_valid=USE_VALID, model_name=MODEL_NAME)
+          dataloader_train=dataloader_train, dataloader_valid=dataloader_valid, num_epochs=NUM_EPOCHS,save_after_every=SAVE_AFTER_EVERY,use_scheduler=USE_SCHEDULER, model_name=MODEL_NAME,LOG_TO_WANDB=LOG_TO_WANDB)
     else:
         lm.load_state_dict(torch.load(LOAD_MODEl))
         lm.eval()
    
-    print("Testing:")
 
-    test(model=lm, dataloader=dataloader_test)
-
+    test_loss,test_perplexity = test(model=lm, dataloader=dataloader_test)
+    print("------------------------------------------------------------------------------")
+    print("| End of Training - Test Loss:",test_loss.item(),"| Test Perplexity:",test_perplexity.item(),"|")
+    print("------------------------------------------------------------------------------")
 
 if __name__ == "__main__":
-    run()
+    parser = argparse.ArgumentParser(
+        description='Train a neural language model and test it on a testing set')
+
+    parser.add_argument('--model_context', "-m", default=2, type=int,
+                        help='The number of previous tokens used to predict next token')
+
+    parser.add_argument('--training_file', "-tr", default="nchlt_text.zu.train",
+                        type=str, help='Name of training file')
+
+    parser.add_argument('--validation_file', "-va", default="nchlt_text.zu.valid",
+                        type=str, help='Name of validation file')
+
+    parser.add_argument('--testing_file', "-te", default="nchlt_text.zu.test",
+                        type=str, help='Name of testing file')
+
+    parser.add_argument('--use_adam', "-a",
+                        action='store_true', help='Use Adam optimizer')
+
+    parser.add_argument('--log_wandb', "-lw", action='store_true',
+                        help='Log to weights and biases platform')
+
+    parser.add_argument('--hidden_size', "-hs", default=128, type=int,
+                        help='size of the hidden layer')
+
+    parser.add_argument('--number_of_hidden_layers', "-nh", default=0, type=int,
+                        help='Number of extra intermediate hidden layers')
+
+    parser.add_argument('--learning_rate', "-lr", default=0.001, type=float,
+                        help='The learning rate used by the optimizer')
+
+    parser.add_argument('--embedding_size', "-es", default=300, type=int,
+                        help='The size of the embedding dimension')
+
+    parser.add_argument('--num_epochs', "-ne", default=30, type=int,
+                        help='Number of epochs to train')
+  
+    parser.add_argument('--batch_size', "-bs", default=128, type=int,
+                        help='Size of mini-batch')
+    
+    parser.add_argument('--dropout_prob', "-dp", default=0.2, type=float,
+                        help='Dropout probability used')
+   
+    parser.add_argument('--save_after_every', "-se", default=10, type=int,
+                        help='After this many epochs the model will be saved')
+
+    parser.add_argument('--load_model', "-lm", default=None, type=str,
+                        help='Name of the model file to load and evaluate')
+
+    parser.add_argument('--model_name', "-mn", default="model.pt", type=str,
+                        help='Name to save model as')
+
+    parser.add_argument('--no_scheduler', "-ns",
+                        action='store_false', help='Dont use scheduler on validation loss to lower learning rate')
+
+    args = parser.parse_args()
+
+    run(args)
