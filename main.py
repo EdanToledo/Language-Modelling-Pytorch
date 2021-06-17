@@ -53,7 +53,7 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
 
             end_batch = time.time()
             if (i+1) % 200 == 0:
-                print("| Epoch: {0:3d} | Batch: {1:5d}/{6:5d} | Learning Rate: {2:1.7f} | ms/batch {3:1.4f} | Mean Training Loss: {4:3.4f} | Perplexity: {5:7.4f} |".format(epoch+1,i+1,optimizer.param_groups[0]["lr"],end_batch-start_batch,(total_loss/(i+1)).item(),torch.exp(total_loss/(i+1)).item(),len(dataloader_train)))
+                print("| Epoch: {0:3d} | Batch: {1:6d}/{6:6d} | Learning Rate: {2:1.7f} | ms/batch {3:1.4f} | Mean Training Loss: {4:3.4f} | Perplexity: {5:7.4f} |".format(epoch+1,i+1,optimizer.param_groups[0]["lr"],end_batch-start_batch,(total_loss/(i+1)).item(),torch.exp(total_loss/(i+1)).item(),len(dataloader_train)))
                 
         epoch_end = time.time()
         
@@ -180,7 +180,7 @@ def run(args):
 
     test_loss,test_perplexity = test(model=lm, dataloader=dataloader_test)
     print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-    print("| End of Training - Test Loss: {0:3.4f} | Test Perplexity: {1:4.7f} |".format(test_loss.item(),test_perplexity.item()))
+    print("| End of Training | Test Loss: {0:3.4f} | Test Perplexity: {1:4.7f} |".format(test_loss.item(),test_perplexity.item()))
     print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         
 
