@@ -53,14 +53,14 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
         total_loss += mid_total_loss
         perplexity = torch.exp(total_loss/count)
 
-        print("Mean Training Loss after Epoch", epoch+1, ":", total_loss/count)
+        print("Mean Training Loss after Epoch", epoch+1, ":", (total_loss/count).item())
         print("Mean Training Perplexity after Epoch", epoch+1, ":", perplexity.item())
         
         if use_valid:
             val_loss = test(model, dataloader_valid)
             print("Learning Rate Used:", optimizer.param_groups[0]["lr"])
             scheduler.step(val_loss)
-            print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss)
+            print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss.item())
      
         if (epoch % save_after_every == 0):
             torch.save(model.state_dict(), "model.pt")
@@ -97,7 +97,7 @@ def test(model, dataloader):
             total_count += 1
 
         print("Mean Accuracy:", mean_batch_accuracy.item()/total_count)
-        print("Mean Loss:", total_loss/total_count)
+        print("Mean Loss:", (total_loss/total_count).item())
         print("Mean Perplexity:", torch.exp(total_loss/total_count).item())
     model.train()
     return (total_loss/total_count)
