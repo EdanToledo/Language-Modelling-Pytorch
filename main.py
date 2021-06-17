@@ -54,8 +54,8 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
 
             end_batch = time.time()
             if i % 200 == 0:
-                print("| Epoch:",epoch+1,"| Batch:",i+1,"| Learning Rate:",optimizer.param_groups[0]["lr"],"| ms/batch:",end_batch-start_batch,"| Mean Loss:",(mid_total_loss/(i+1)).item(),"| Perplexity:",torch.exp(mid_total_loss/(i+1)).item(),"|")
-        
+                print("| Epoch: {0:3d} | Batch: {1:5d} | Learning Rate: {2:1.7f} | ms/batch {3:1.4f} | Mean Loss: {4:3.4f} | Perplexity: {5:7.4f} |".format(epoch+1,i+1,optimizer.param_groups[0]["lr"],end_batch-start_batch,(mid_total_loss/(i+1)).item(),torch.exp(mid_total_loss/(i+1)).item()))
+                
         epoch_end = time.time()
         total_loss += mid_total_loss
         perplexity = torch.exp(total_loss/count)
@@ -66,9 +66,9 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             wandb.log({"Mean Validation Loss After Epoch" : val_loss.item()})
 
         val_loss , val_perplexity = test(model, dataloader_valid)
-        print("------------------------------------------------------------------------------")
-        print("| End of Epoch", epoch+1, "| Time Taken:",epoch_end-epoch_start,"| Training Loss:",(total_loss/count).item(),"| Training Perplexity:",perplexity.item(),"| Validation Loss:",val_loss.item(),"| Validation Perplexity:",val_perplexity.item(),"|")
-        print("------------------------------------------------------------------------------")
+        print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+        print("| End of Epoch: {0:3d} | Time Taken: {1:1.4f} | Training Loss: {2:3.4f} | Training Perplexity: {3:7.4f} | Validation Loss: {4:3.4f} | Validation Perplexity: {5:7.4f} |".format(epoch+1,epoch_end-epoch_start,(total_loss/count).item(),perplexity.item(),val_loss.item(),val_perplexity.item()))
+        print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         
         if use_scheduler:
             scheduler.step(val_loss.item())
@@ -180,15 +180,16 @@ def run(args):
    
 
     test_loss,test_perplexity = test(model=lm, dataloader=dataloader_test)
-    print("------------------------------------------------------------------------------")
-    print("| End of Training - Test Loss:",test_loss.item(),"| Test Perplexity:",test_perplexity.item(),"|")
-    print("------------------------------------------------------------------------------")
+    print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+    print("| End of Training - Test Loss: {0:3.4f} | Test Perplexity: {1:4.7f} |".format(test_loss.item(),test_perplexity.item()))
+    print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Train a neural language model and test it on a testing set')
 
-    parser.add_argument('--model_context', "-m", default=2, type=int,
+    parser.add_argument('--model_context', "-m", default=3, type=int,
                         help='The number of previous tokens used to predict next token')
 
     parser.add_argument('--training_file', "-tr", default="nchlt_text.zu.train",
