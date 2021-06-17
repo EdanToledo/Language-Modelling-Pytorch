@@ -35,7 +35,7 @@ class language_model(nn.Module):
 
         self.dropout = nn.Dropout(dropout_prob)
 
-        self.loss_function = nn.NLLLoss()
+        self.loss_function = nn.CrossEntropyLoss()
 
     def forward(self, input_data):
 
@@ -54,7 +54,7 @@ class language_model(nn.Module):
         final_output = self.output_layer(
             initial_output)  # Size = batch x Vocab
 
-        log_probabilities = F.log_softmax(
+        log_probabilities = F.softmax(
             final_output, dim=1)  # Size = batch x Vocab
 
         return log_probabilities
