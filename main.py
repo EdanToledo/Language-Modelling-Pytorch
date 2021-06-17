@@ -18,7 +18,6 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
     model.train()
     total_loss = 0
     count = 0
-    perplexity=0
     # epoch is the number of times we train fully on the whole dataset
     for epoch in range(0, num_epochs):
         mid_total_loss = 0
@@ -42,7 +41,7 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             # This uses the loss function to calculate the gradients
             loss.backward()
 
-            mid_total_loss += loss.item()
+            mid_total_loss += loss
             count += 1
 
             # This uses the optimizer to take one step of gradient descent
@@ -52,16 +51,15 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             #     print("Mean Loss at iteration", i+1, ":", mid_total_loss/(i+1))
 
         total_loss += mid_total_loss
-        perplexity *= torch.exp(total_loss/count)
+        perplexity = torch.exp(total_loss/count)
 
         print("Mean Training Loss after Epoch", epoch+1, ":", total_loss/count)
-        print("Mean Training Perplexity after Epoch", epoch+1, ":", perplexity)
+        print("Mean Training Perplexity after Epoch", epoch+1, ":", perplexity.item())
         
         if use_valid:
             val_loss = test(model, dataloader_valid)
             print("Learning Rate Used:", optimizer.param_groups[0]["lr"])
             scheduler.step(val_loss)
-            print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss)
             print("Mean Validation Loss After Epoch", epoch+1, ":", val_loss)
      
         if (epoch % save_after_every == 0):
@@ -95,12 +93,12 @@ def test(model, dataloader):
 
             # calculate loss value
             loss = model.loss_function(log_probs, current_word_ids)
-            total_loss += loss.item()
+            total_loss += loss
             total_count += 1
 
         print("Mean Accuracy:", mean_batch_accuracy.item()/total_count)
         print("Mean Loss:", total_loss/total_count)
-        print("Mean Perplexity:", torch.exp(total_loss/total_count))
+        print("Mean Perplexity:", torch.exp(total_loss/total_count).item())
     model.train()
     return (total_loss/total_count)
 
@@ -110,7 +108,7 @@ def run():
     EMBEDDING_SIZE = 300
     HIDDEN_SIZE = 128
     NUMBER_OF_HIDDEN_LAYERS = 0
-    LEARNING_RATE = 0.01
+    LEARNING_RATE = 0.001
     NUM_EPOCHS = 15
     BATCH_SIZE = 256
     DROPOUT_PROBABILITY = 0.2
