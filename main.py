@@ -53,8 +53,8 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             optimizer.step()
 
             end_batch = time.time()
-            if i % 500 == 0:
-                print("| Epoch:",epoch+1,"| Batch:",i+1,"Learning Rate:",optimizer.param_groups[0]["lr"],"| ms/b:",end_batch-start_batch,"| Mean Loss:",(mid_total_loss/(i+1)).item(),"| Perplexity:",torch.exp(mid_total_loss/(i+1)).item(),"|")
+            if i % 200 == 0:
+                print("| Epoch:",epoch+1,"| Batch:",i+1,"| Learning Rate:",optimizer.param_groups[0]["lr"],"| ms/batch:",end_batch-start_batch,"| Mean Loss:",(mid_total_loss/(i+1)).item(),"| Perplexity:",torch.exp(mid_total_loss/(i+1)).item(),"|")
         
         epoch_end = time.time()
         total_loss += mid_total_loss
