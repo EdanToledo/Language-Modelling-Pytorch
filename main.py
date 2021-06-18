@@ -72,9 +72,13 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
         
         if use_scheduler:
             scheduler.step(val_loss.item())
-     
+
         if (epoch % save_after_every == 0):
             torch.save(model.state_dict(), model_name)
+        
+        if(optimizer.param_groups[0]["lr"]<=0.00000001):
+            print("| Learning Rate Too Small | Quitting Training... |")
+            break
     
     torch.save(model.state_dict(), model_name)
 
