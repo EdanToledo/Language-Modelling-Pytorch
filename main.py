@@ -10,6 +10,7 @@ import multiprocessing
 import wandb
 import argparse
 import time
+import sys
 
 
 torch.manual_seed(42)
@@ -128,6 +129,7 @@ def run(args):
     USE_SCHEDULER = args.no_scheduler
     USE_ADAM = args.use_adam 
     LOG_TO_WANDB=args.log_wandb
+    LOG_FILE = args.log_file
 
 
     if LOG_TO_WANDB:
@@ -167,8 +169,12 @@ def run(args):
     else:
         optimizer = optim.SGD(lm.parameters(), lr=LEARNING_RATE)
 
-
-
+    
+    if (not LOG_FILE == None):
+        print("Printing output to log file...")
+        sys.stdout = open(LOG_FILE, "w")
+    
+    
     if (LOAD_MODEl == None):
         print("Training Model...")
         train(model=lm, optimizer=optimizer,
@@ -182,7 +188,9 @@ def run(args):
     print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
     print("| End of Training | Test Loss: {0:3.4f} | Test Perplexity: {1:4.7f} |".format(test_loss.item(),test_perplexity.item()))
     print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-        
+    if (LOG_FILE != None):
+        sys.stdout.close()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -238,6 +246,9 @@ if __name__ == "__main__":
 
     parser.add_argument('--no_scheduler', "-ns",
                         action='store_false', help='Dont use scheduler on validation loss to lower learning rate')
+
+    parser.add_argument('--log_file', "-lf", default=None, type=str,
+                        help='Name of log file to print to, otherwise print to console')
 
     args = parser.parse_args()
 
