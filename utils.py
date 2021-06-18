@@ -3,6 +3,8 @@ import os
 from collections import defaultdict
 import csv
 
+# Authors - TLDEDA001 - CHNROY002
+
 def read_file(filename):
     """Reads a file and iterates through it extracts each sentence's words from the file.
         :param filename: The name of the file to read from.

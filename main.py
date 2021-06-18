@@ -12,6 +12,7 @@ import argparse
 import time
 import sys
 
+# Authors - TLDEDA001 - CHNROY002
 
 torch.manual_seed(42)
 

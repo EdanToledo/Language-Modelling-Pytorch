@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import utils
 
+# Authors - TLDEDA001 - CHNROY002
 
 torch.manual_seed(42)
 
