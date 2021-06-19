@@ -1,0 +1,94 @@
+Training Model...
+| Epoch:   1 | Batch:    200/   713 | Learning Rate: 0.0010000 | ms/batch 0.1412 | Mean Training Loss: 9.3667 | Perplexity: 11692.1006 |
+| Epoch:   1 | Batch:    400/   713 | Learning Rate: 0.0010000 | ms/batch 0.1451 | Mean Training Loss: 8.7868 | Perplexity: 6546.9565 |
+| Epoch:   1 | Batch:    600/   713 | Learning Rate: 0.0010000 | ms/batch 0.1491 | Mean Training Loss: 8.4350 | Perplexity: 4605.5557 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   1 | Time Taken: 104.6167 | Training Loss: 8.3387 | Training Perplexity: 4182.8096 | Validation Loss: 7.1877 | Validation Perplexity: 1323.0911 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:   2 | Batch:    200/   713 | Learning Rate: 0.0010000 | ms/batch 0.1565 | Mean Training Loss: 6.3085 | Perplexity: 549.2469 |
+| Epoch:   2 | Batch:    400/   713 | Learning Rate: 0.0010000 | ms/batch 0.1597 | Mean Training Loss: 6.5608 | Perplexity: 706.8077 |
+| Epoch:   2 | Batch:    600/   713 | Learning Rate: 0.0010000 | ms/batch 0.1626 | Mean Training Loss: 6.3880 | Perplexity: 594.6887 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   2 | Time Taken: 113.0479 | Training Loss: 6.3108 | Training Perplexity: 550.4642 | Validation Loss: 6.9101 | Validation Perplexity: 1002.3876 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:   3 | Batch:    200/   713 | Learning Rate: 0.0010000 | ms/batch 0.1616 | Mean Training Loss: 5.4803 | Perplexity: 239.9173 |
+| Epoch:   3 | Batch:    400/   713 | Learning Rate: 0.0010000 | ms/batch 0.1614 | Mean Training Loss: 5.8520 | Perplexity: 347.9338 |
+| Epoch:   3 | Batch:    600/   713 | Learning Rate: 0.0010000 | ms/batch 0.1616 | Mean Training Loss: 5.7365 | Perplexity: 309.9678 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   3 | Time Taken: 115.8066 | Training Loss: 5.6762 | Training Perplexity: 291.8471 | Validation Loss: 6.7186 | Validation Perplexity: 827.6862 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:   4 | Batch:    200/   713 | Learning Rate: 0.0010000 | ms/batch 0.1613 | Mean Training Loss: 5.1675 | Perplexity: 175.4773 |
+| Epoch:   4 | Batch:    400/   713 | Learning Rate: 0.0010000 | ms/batch 0.1637 | Mean Training Loss: 5.5562 | Perplexity: 258.8374 |
+| Epoch:   4 | Batch:    600/   713 | Learning Rate: 0.0010000 | ms/batch 0.1608 | Mean Training Loss: 5.4642 | Perplexity: 236.0964 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   4 | Time Taken: 116.4326 | Training Loss: 5.4036 | Training Perplexity: 222.2119 | Validation Loss: 6.6199 | Validation Perplexity: 749.8589 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:   5 | Batch:    200/   713 | Learning Rate: 0.0010000 | ms/batch 0.1631 | Mean Training Loss: 5.0138 | Perplexity: 150.4684 |
+| Epoch:   5 | Batch:    400/   713 | Learning Rate: 0.0010000 | ms/batch 0.1660 | Mean Training Loss: 5.4111 | Perplexity: 223.8816 |
+| Epoch:   5 | Batch:    600/   713 | Learning Rate: 0.0010000 | ms/batch 0.1618 | Mean Training Loss: 5.3226 | Perplexity: 204.9155 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   5 | Time Taken: 117.3602 | Training Loss: 5.2682 | Training Perplexity: 194.0638 | Validation Loss: 6.5050 | Validation Perplexity: 668.4748 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:   6 | Batch:    200/   713 | Learning Rate: 0.0010000 | ms/batch 0.1635 | Mean Training Loss: 4.9579 | Perplexity: 142.3001 |
+| Epoch:   6 | Batch:    400/   713 | Learning Rate: 0.0010000 | ms/batch 0.1655 | Mean Training Loss: 5.3397 | Perplexity: 208.4484 |
+| Epoch:   6 | Batch:    600/   713 | Learning Rate: 0.0010000 | ms/batch 0.1609 | Mean Training Loss: 5.2485 | Perplexity: 190.2754 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   6 | Time Taken: 117.7232 | Training Loss: 5.1983 | Training Perplexity: 180.9597 | Validation Loss: 6.4484 | Validation Perplexity: 631.6944 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:   7 | Batch:    200/   713 | Learning Rate: 0.0010000 | ms/batch 0.1626 | Mean Training Loss: 4.9292 | Perplexity: 138.2627 |
+| Epoch:   7 | Batch:    400/   713 | Learning Rate: 0.0010000 | ms/batch 0.1624 | Mean Training Loss: 5.2854 | Perplexity: 197.4360 |
+| Epoch:   7 | Batch:    600/   713 | Learning Rate: 0.0010000 | ms/batch 0.1631 | Mean Training Loss: 5.2038 | Perplexity: 181.9682 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   7 | Time Taken: 117.0614 | Training Loss: 5.1516 | Training Perplexity: 172.7109 | Validation Loss: 6.5271 | Validation Perplexity: 683.4113 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:   8 | Batch:    200/   713 | Learning Rate: 0.0010000 | ms/batch 0.1627 | Mean Training Loss: 4.9173 | Perplexity: 136.6332 |
+| Epoch:   8 | Batch:    400/   713 | Learning Rate: 0.0010000 | ms/batch 0.1642 | Mean Training Loss: 5.2422 | Perplexity: 189.0792 |
+| Epoch:   8 | Batch:    600/   713 | Learning Rate: 0.0010000 | ms/batch 0.1617 | Mean Training Loss: 5.1632 | Perplexity: 174.7142 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   8 | Time Taken: 116.7589 | Training Loss: 5.1142 | Training Perplexity: 166.3618 | Validation Loss: 6.5359 | Validation Perplexity: 689.4804 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:   9 | Batch:    200/   713 | Learning Rate: 0.0001000 | ms/batch 0.1666 | Mean Training Loss: 4.6708 | Perplexity: 106.7823 |
+| Epoch:   9 | Batch:    400/   713 | Learning Rate: 0.0001000 | ms/batch 0.1676 | Mean Training Loss: 4.9201 | Perplexity: 137.0179 |
+| Epoch:   9 | Batch:    600/   713 | Learning Rate: 0.0001000 | ms/batch 0.1608 | Mean Training Loss: 4.8734 | Perplexity: 130.7710 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:   9 | Time Taken: 118.1995 | Training Loss: 4.6689 | Training Perplexity: 106.5761 | Validation Loss: 4.9016 | Validation Perplexity: 134.4989 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:  10 | Batch:    200/   713 | Learning Rate: 0.0001000 | ms/batch 0.1611 | Mean Training Loss: 3.8623 | Perplexity: 47.5768 |
+| Epoch:  10 | Batch:    400/   713 | Learning Rate: 0.0001000 | ms/batch 0.1678 | Mean Training Loss: 4.2251 | Perplexity: 68.3817 |
+| Epoch:  10 | Batch:    600/   713 | Learning Rate: 0.0001000 | ms/batch 0.1654 | Mean Training Loss: 4.2308 | Perplexity: 68.7747 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:  10 | Time Taken: 117.7588 | Training Loss: 4.1093 | Training Perplexity: 60.9025 | Validation Loss: 4.6822 | Validation Perplexity: 108.0121 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:  11 | Batch:    200/   713 | Learning Rate: 0.0001000 | ms/batch 0.1617 | Mean Training Loss: 3.7036 | Perplexity: 40.5913 |
+| Epoch:  11 | Batch:    400/   713 | Learning Rate: 0.0001000 | ms/batch 0.1656 | Mean Training Loss: 4.0575 | Perplexity: 57.8294 |
+| Epoch:  11 | Batch:    600/   713 | Learning Rate: 0.0001000 | ms/batch 0.1627 | Mean Training Loss: 4.0603 | Perplexity: 57.9891 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:  11 | Time Taken: 116.9557 | Training Loss: 3.9600 | Training Perplexity: 52.4552 | Validation Loss: 4.5754 | Validation Perplexity: 97.0687 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:  12 | Batch:    200/   713 | Learning Rate: 0.0001000 | ms/batch 0.1630 | Mean Training Loss: 3.6308 | Perplexity: 37.7413 |
+| Epoch:  12 | Batch:    400/   713 | Learning Rate: 0.0001000 | ms/batch 0.1652 | Mean Training Loss: 3.9733 | Perplexity: 53.1571 |
+| Epoch:  12 | Batch:    600/   713 | Learning Rate: 0.0001000 | ms/batch 0.1638 | Mean Training Loss: 3.9756 | Perplexity: 53.2818 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:  12 | Time Taken: 118.4322 | Training Loss: 3.8862 | Training Perplexity: 48.7265 | Validation Loss: 4.5147 | Validation Perplexity: 91.3461 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:  13 | Batch:    200/   713 | Learning Rate: 0.0001000 | ms/batch 0.1621 | Mean Training Loss: 3.5939 | Perplexity: 36.3774 |
+| Epoch:  13 | Batch:    400/   713 | Learning Rate: 0.0001000 | ms/batch 0.1654 | Mean Training Loss: 3.9250 | Perplexity: 50.6533 |
+| Epoch:  13 | Batch:    600/   713 | Learning Rate: 0.0001000 | ms/batch 0.1624 | Mean Training Loss: 3.9274 | Perplexity: 50.7766 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:  13 | Time Taken: 118.5226 | Training Loss: 3.8440 | Training Perplexity: 46.7140 | Validation Loss: 4.4710 | Validation Perplexity: 87.4467 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:  14 | Batch:    200/   713 | Learning Rate: 0.0001000 | ms/batch 0.1624 | Mean Training Loss: 3.5650 | Perplexity: 35.3401 |
+| Epoch:  14 | Batch:    400/   713 | Learning Rate: 0.0001000 | ms/batch 0.1643 | Mean Training Loss: 3.8920 | Perplexity: 49.0065 |
+| Epoch:  14 | Batch:    600/   713 | Learning Rate: 0.0001000 | ms/batch 0.1640 | Mean Training Loss: 3.8957 | Perplexity: 49.1921 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:  14 | Time Taken: 118.8130 | Training Loss: 3.8160 | Training Perplexity: 45.4220 | Validation Loss: 4.4320 | Validation Perplexity: 84.0958 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Epoch:  15 | Batch:    200/   713 | Learning Rate: 0.0001000 | ms/batch 0.1674 | Mean Training Loss: 3.5468 | Perplexity: 34.7037 |
+| Epoch:  15 | Batch:    400/   713 | Learning Rate: 0.0001000 | ms/batch 0.1667 | Mean Training Loss: 3.8676 | Perplexity: 47.8289 |
+| Epoch:  15 | Batch:    600/   713 | Learning Rate: 0.0001000 | ms/batch 0.1654 | Mean Training Loss: 3.8722 | Perplexity: 48.0462 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Epoch:  15 | Time Taken: 118.8934 | Training Loss: 3.7958 | Training Perplexity: 44.5146 | Validation Loss: 4.4037 | Validation Perplexity: 81.7537 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| End of Training | Test Loss: 4.7333 | Test Perplexity: 113.6659622 |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------

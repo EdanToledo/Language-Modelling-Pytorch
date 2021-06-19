@@ -227,7 +227,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Train a neural language model and test it on a testing set')
 
-    parser.add_argument('--model_context', "-m", default=3, type=int,
+    parser.add_argument('--model_context', "-m", default=4, type=int,
                         help='The number of previous tokens used to predict next token')
 
     parser.add_argument('--training_file', "-tr", default="nchlt_text.nr.train",
@@ -245,7 +245,7 @@ if __name__ == "__main__":
     parser.add_argument('--log_wandb', "-lw", action='store_true',
                         help='Log to weights and biases platform')
 
-    parser.add_argument('--hidden_size', "-hs", default=128, type=int,
+    parser.add_argument('--hidden_size', "-hs", default=1000, type=int,
                         help='size of the hidden layer')
 
     parser.add_argument('--number_of_hidden_layers', "-nh", default=0, type=int,
@@ -254,13 +254,13 @@ if __name__ == "__main__":
     parser.add_argument('--learning_rate', "-lr", default=0.001, type=float,
                         help='The learning rate used by the optimizer')
 
-    parser.add_argument('--embedding_size', "-es", default=500, type=int,
+    parser.add_argument('--embedding_size', "-es", default=1000, type=int,
                         help='The size of the embedding dimension')
 
-    parser.add_argument('--num_epochs', "-ne", default=30, type=int,
+    parser.add_argument('--num_epochs', "-ne", default=15, type=int,
                         help='Number of epochs to train')
   
-    parser.add_argument('--batch_size', "-bs", default=512, type=int,
+    parser.add_argument('--batch_size', "-bs", default=1024, type=int,
                         help='Size of mini-batch')
     
     parser.add_argument('--dropout_prob', "-dp", default=0.2, type=float,
