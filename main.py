@@ -230,13 +230,13 @@ if __name__ == "__main__":
     parser.add_argument('--model_context', "-m", default=3, type=int,
                         help='The number of previous tokens used to predict next token')
 
-    parser.add_argument('--training_file', "-tr", default="nchlt_text.zu.train",
+    parser.add_argument('--training_file', "-tr", default="nchlt_text.nr.train",
                         type=str, help='Name of training file')
 
-    parser.add_argument('--validation_file', "-va", default="nchlt_text.zu.valid",
+    parser.add_argument('--validation_file', "-va", default="nchlt_text.nr.valid",
                         type=str, help='Name of validation file')
 
-    parser.add_argument('--testing_file', "-te", default="nchlt_text.zu.test",
+    parser.add_argument('--testing_file', "-te", default="nchlt_text.nr.test",
                         type=str, help='Name of testing file')
 
     parser.add_argument('--use_adam', "-a",
