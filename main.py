@@ -80,9 +80,9 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
             wandb.log({"Mean Training Perplexity after Epoch": perplexity.item()})
             wandb.log({"Mean Validation Loss After Epoch" : val_loss.item()})
 
-        val_loss , val_perplexity = test(model, dataloader_valid)
+        val_loss , val_perplexity, val_acc = test(model, dataloader_valid)
         print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-        print("| End of Epoch: {0:3d} | Time Taken: {1:1.4f} | Training Loss: {2:3.4f} | Training Perplexity: {3:7.4f} | Validation Loss: {4:3.4f} | Validation Perplexity: {5:7.4f} |".format(epoch+1,epoch_end-epoch_start,(total_loss/count).item(),perplexity.item(),val_loss.item(),val_perplexity.item()))
+        print("| End of Epoch: {0:3d} | Time Taken: {1:1.4f} | Training Loss: {2:3.4f} | Training Perplexity: {3:7.4f} | Validation Loss: {4:3.4f} | Validation Perplexity: {5:7.4f} | Validation Accuracy: {6:1.3f}".format(epoch+1,epoch_end-epoch_start,(total_loss/count).item(),perplexity.item(),val_loss.item(),val_perplexity.item(),val_acc.item()))
         print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         
         if use_scheduler:
@@ -103,7 +103,7 @@ def test(model, dataloader):
     Evaluate model on data
     :param model: model to evaluate.
     :param dataloader: dataloader object that contains testing data to evaluate.
-    :return average loss of testing data and average perplexity"""
+    :return average loss of testing data and average perplexity and average accuracy"""
 
     # Put model into eval/test mode - important for things such as dropout
     model.eval()
@@ -133,7 +133,7 @@ def test(model, dataloader):
             total_count += 1
 
     model.train()
-    return (total_loss/total_count) , torch.exp(total_loss/total_count)
+    return (total_loss/total_count) , torch.exp(total_loss/total_count), (mean_batch_accuracy/total_count)
 
 
 def run(args):
@@ -215,9 +215,9 @@ def run(args):
         lm.eval()
    
 
-    test_loss,test_perplexity = test(model=lm, dataloader=dataloader_test)
+    test_loss,test_perplexity,test_acc = test(model=lm, dataloader=dataloader_test)
     print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-    print("| End of Training | Test Loss: {0:3.4f} | Test Perplexity: {1:4.7f} |".format(test_loss.item(),test_perplexity.item()))
+    print("| End of Training | Test Loss: {0:3.4f} | Test Perplexity: {1:4.7f} | Test Accuracy {2:1.3f} |".format(test_loss.item(),test_perplexity.item(),test_acc.item()))
     print("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
     if (LOG_FILE != None):
         sys.stdout.close()
