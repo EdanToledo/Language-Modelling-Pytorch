@@ -17,7 +17,7 @@ import sys
 torch.manual_seed(42)
 
 
-def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_scheduler=True,patience = 0, model_name="model.pt",LOG_TO_WANDB=False):
+def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_scheduler=True,patience = 2, model_name="model.pt",LOG_TO_WANDB=False):
     """
     Train a model.
 
@@ -91,7 +91,7 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
         if (epoch % save_after_every == 0):
             torch.save(model.state_dict(), model_name)
         
-        if(optimizer.param_groups[0]["lr"]<=0.00000001):
+        if(optimizer.param_groups[0]["lr"]<=0.000001):
             print("| Learning Rate Too Small | Quitting Training... |")
             break
     
