@@ -88,7 +88,7 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
         if use_scheduler:
             scheduler.step(val_loss.item())
 
-        if (epoch % save_after_every == 0):
+        if (epoch+1 % save_after_every == 0):
             torch.save(model.state_dict(), model_name)
         
         if(optimizer.param_groups[0]["lr"]<=0.000001):
@@ -254,13 +254,13 @@ if __name__ == "__main__":
     parser.add_argument('--learning_rate', "-lr", default=0.001, type=float,
                         help='The learning rate used by the optimizer')
 
-    parser.add_argument('--embedding_size', "-es", default=300, type=int,
+    parser.add_argument('--embedding_size', "-es", default=500, type=int,
                         help='The size of the embedding dimension')
 
     parser.add_argument('--num_epochs', "-ne", default=30, type=int,
                         help='Number of epochs to train')
   
-    parser.add_argument('--batch_size', "-bs", default=128, type=int,
+    parser.add_argument('--batch_size', "-bs", default=512, type=int,
                         help='Size of mini-batch')
     
     parser.add_argument('--dropout_prob', "-dp", default=0.2, type=float,
