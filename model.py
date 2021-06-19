@@ -10,7 +10,7 @@ torch.manual_seed(42)
 
 
 class language_model(nn.Module):
-    """The neural model class. The network consists of an embedding layer, a hidden layer with dropout and an embedding layer.
+    """The neural model class. The network consists of an embedding layer, a hidden layer with dropout and an embedding layer. The model makes use of tanh functions to introduce nonlinearity.
     More hidden layers can be added dynamically """
     def __init__(self, context, embedding_size, hidden_size, number_of_layers, vocab, dropout_prob):
         super(language_model, self).__init__()

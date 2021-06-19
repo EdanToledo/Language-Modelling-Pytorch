@@ -175,14 +175,14 @@ def run(args):
     
 
     num_workers = multiprocessing.cpu_count()
-
+    # Load datasets
     zulu_data_train = language_dataset(
         filename=TRAINING_FILENAME, context=MODEL_CONTEXT)
     zulu_data_valid = language_dataset(filename=VALID_FILENAME, context=MODEL_CONTEXT,
                                        word_to_id=zulu_data_train.word_to_id, word_counts=zulu_data_train.word_counts)
     zulu_data_test = language_dataset(filename=TESTING_FILENAME, context=MODEL_CONTEXT,
                                       word_to_id=zulu_data_train.word_to_id, word_counts=zulu_data_train.word_counts)
-
+    # Put datasets into dataloader objects
     dataloader_train = DataLoader(
         zulu_data_train, batch_size=BATCH_SIZE, num_workers=num_workers)
     dataloader_valid = DataLoader(
@@ -190,9 +190,11 @@ def run(args):
     dataloader_test = DataLoader(
         zulu_data_test, batch_size=BATCH_SIZE, num_workers=num_workers)
 
+    # Create the language model
     lm = language_model(context=MODEL_CONTEXT, embedding_size=EMBEDDING_SIZE,
                         hidden_size=HIDDEN_SIZE, number_of_layers=NUMBER_OF_HIDDEN_LAYERS, vocab=zulu_data_train.vocab_length, dropout_prob=DROPOUT_PROBABILITY)
 
+    # Choose and create the optimizer
     if (USE_ADAM):
         optimizer = optim.AdamW(lm.parameters(), lr=LEARNING_RATE)
     else:
@@ -203,7 +205,7 @@ def run(args):
         print("Printing output to log file...")
         sys.stdout = open(LOG_FILE, "w")
     
-    
+    # Choose to train a model or simply evaluate a pretrained model
     if (LOAD_MODEl == None):
         print("Training Model...")
         train(model=lm, optimizer=optimizer,
