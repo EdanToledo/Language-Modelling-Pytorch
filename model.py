@@ -10,6 +10,8 @@ torch.manual_seed(42)
 
 
 class language_model(nn.Module):
+    """The neural model class. The network consists of an embedding layer, a hidden layer with dropout and an embedding layer.
+    More hidden layers can be added dynamically """
     def __init__(self, context, embedding_size, hidden_size, number_of_layers, vocab, dropout_prob):
         super(language_model, self).__init__()
 
@@ -39,6 +41,11 @@ class language_model(nn.Module):
         self.loss_function = nn.CrossEntropyLoss()
 
     def forward(self, input_data):
+        """Propogates the input through the network
+        
+        :param input_data: the ids of the context words used to predict the next word
+        
+        :return final_output: the output of the network which is a tensor of the size Batch x Vocab """
 
         embeddings = self.embedding(
             input_data).view(-1, (self.embedding_size*self.context))  # Size = batch x (embeddings * context)

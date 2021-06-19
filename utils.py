@@ -71,25 +71,25 @@ def create_word_ids(sentences):
                 current_id += 1
     return word_to_id
 
-def create_n_gram(sentences,n):
+def create_n_gram(sentences,context):
     """Creates an array of present words to previous words depending on the size of the ngram.
 
     :param sentences: A 2d array of individual words and of each sentence
-    :param n: The size of the context (previous words)
+    :param context: The size of the context (previous words)
 
     :return ngram: An array of tuples in the form of (array of previous words, word).
     """
     ngram = []
     for sentence in sentences:
-        if len(sentence)<n+1:
+        if len(sentence)<context+1:
             continue
         prev_words = []
-        for i in range (n):
+        for i in range (context):
             prev_words.append(sentence[i])
         
-        ngram.append((prev_words[:],sentence[n]))
+        ngram.append((prev_words[:],sentence[context]))
        
-        for i in range (n, len(sentence)-1):
+        for i in range (context, len(sentence)-1):
             prev_words.pop(0)
             prev_words.append(sentence[i])
             ngram.append((prev_words[:],sentence[i+1]))

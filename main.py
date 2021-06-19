@@ -18,6 +18,20 @@ torch.manual_seed(42)
 
 
 def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_after_every,use_scheduler=True,patience = 0, model_name="model.pt",LOG_TO_WANDB=False):
+    """
+    Train a model.
+
+    :param model: the pytorch model to train.
+    :param optimizer: The optimizer that is used to update the models gradients.
+    :param dataloader_train: the dataloader object that stores the training data.
+    :param dataloader_valid: the dataloader object that stores the validation data.
+    :param num_epochs: the number of epochs to train the model on.
+    :param save_after_every: the number of epochs that pass until the model is saved - checkpoint essentially.
+    :param use_scheduler: boolean to decide whether or not validation loss is used to lower learning rate.
+    :param patience: the patience value for the scheduler - after how many epochs of no validation improvement to reduce learning rate.
+    :param model_name: The name to save the model after.
+    :param LOG_TO_WANDB: boolean to decide whether to log to wandb.
+    """
     if use_scheduler:
         scheduler = ReduceLROnPlateau(optimizer=optimizer, mode="min",patience=patience)
     # put model into train mode - important for certain features such as dropout
@@ -85,6 +99,12 @@ def train(model, optimizer, dataloader_train, dataloader_valid, num_epochs,save_
 
 
 def test(model, dataloader):
+    """
+    Evaluate model on data
+    :param model: model to evaluate.
+    :param dataloader: dataloader object that contains testing data to evaluate.
+    :return average loss of testing data and average perplexity"""
+
     # Put model into eval/test mode - important for things such as dropout
     model.eval()
     total_loss = 0
@@ -117,6 +137,10 @@ def test(model, dataloader):
 
 
 def run(args):
+    """
+    train the model and evaluate it
+    :param args: takes in an argparser object
+    """
     MODEL_CONTEXT = args.model_context
     EMBEDDING_SIZE = args.embedding_size
     HIDDEN_SIZE = args.hidden_size
