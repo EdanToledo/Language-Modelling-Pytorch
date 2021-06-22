@@ -8,7 +8,6 @@ GitPython==3.1.18
 idna==2.10
 numpy==1.20.3
 pathtools==0.1.2
-pkg-resources==0.0.0
 promise==2.3
 protobuf==3.17.3
 psutil==5.8.0
@@ -20,7 +19,7 @@ shortuuid==1.0.1
 six==1.16.0
 smmap==4.0.0
 subprocess32==3.5.4
-torch==1.9.0
+torch==1.8.1
 typing-extensions==3.10.0.0
 urllib3==1.26.5
 wandb==0.10.32
